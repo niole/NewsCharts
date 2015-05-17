@@ -1,4 +1,6 @@
 "use strict";
+var dotenv = require('dotenv');
+dotenv.load();
 
 var express = require('express');
 var path = require('path');
@@ -16,7 +18,7 @@ var db = mongo.db("mongodb://localhost:27017", {native_parser:true});
  * name it whatever you want */
 
 var routes = require('./routes/index');
-var rendermarkdown = require('./routes/rendermarkdown');
+var stream = require('./routes/stream');
 
 var app = express();
 
@@ -54,7 +56,7 @@ app.use(function(req,res,next){
  *your database routes file.
  *My routes file is 'routes/rendermarkdown.js'*/
 app.use('/', routes);
-//app.use('/rendermarkdown', rendermarkdown);
+app.use('/stream', stream);
 
 /// catch 405 and forwarding to error handler
 app.use(function(req, res, next) {
