@@ -39,25 +39,34 @@ var Charts = React.createClass({
 
 
     $.ajax({
-      url: "/stream/gettweets/BBCNews",
+      url: "/stream/gettweets/BBCWorld",
       type: 'POST',
       dataType: 'json',
       success: function(data) {
 
-       console.log('succesful POSt in TweetProcessor');
+        console.log('succesful POSt in TweetProcessor');
 
-       var tweetWordsArray = [];
-       data.forEach( function( tweet ) {
+        var tweetWordsArray = [];
+        data.forEach( function( tweet ) {
+//          console.log("tweet");
+//          console.log(tweet);
 
-         var tweetArray = tweet.split(" ");
-         tweetArray.forEach( function( twit ) {
+          var tweetArray = tweet.split(" ");
+          tweetArray.forEach( function( twit ) {
+//            console.log('twit');
+//            console.log(twit);
 
-           if ( twit.slice(0,1) === twit.slice(0,1).toUpperCase() ) {
-              tweetWordsArray.push( twit );
+//             if ( isNaN( twit.slice(0,1) ) && twit.slice(0,1) !== "@" &&
+//                 twit.slice(0,1) !== '"' && twit.slice(0,1) !== "#" &&
+//                  twit.slice(0,1) !== "-" && twit.slice(0,1) !== "(" &&
+//                   twit.slice(0,1) === twit.slice(0,1).toUpperCase() ) {
+                tweetWordsArray.push( twit );
 
-             }
-         });
-      });
+           //    }
+           });
+        });
+        console.log('tweetWordsArray (only capitalized words)');
+        console.log(tweetWordsArray);
 
       this.setState( { "tweets": tweetWordsArray, "countryDict": this.props.countryDict } );
       }.bind(this),
@@ -66,8 +75,8 @@ var Charts = React.createClass({
 
      console.error(this.props.url,status.err.toString());
 
-    }.bind(this)
-  });
+      }.bind(this)
+    });
 
   },
   // render the line chart and radial heatmap
@@ -86,20 +95,28 @@ var Charts = React.createClass({
 //      {label: 'Margarita', value: 20.0},
 
     this.state.tweets.forEach( function(tweet) {
+
       console.log('inside RENDER APP forEach');
       console.log('this.props.countryDict');
       console.log(this.props.countryDict);
+      console.log('countryHistDict');
+      console.log(countryHistDict);
 
+      /* If the first three letters of the capitalized word are a key in
+       * the dictionary of countries*/
       if ( tweet.length > 2 && tweet.slice(0,3) in this.props.countryDict ) {
 
         this.props.countryDict[ tweet.slice(0,3) ].forEach( function( country ) {
 
-          if ( country in countryHistDict ) {
-            countryHistDict[ country ] += 1;
+          /* Check to see if a country in the countryDict is in the tweet. */
+          if ( tweet.indexOf(country) > -1 ) {
+            if ( country in countryHistDict ) {
+              countryHistDict[ country ] += 1;
 
-          } else {
-            countryHistDict[ country ] = 1;
+              } else {
+                countryHistDict[ country ] = 1;
 
+              }
           }
         }.bind(this));
       }
