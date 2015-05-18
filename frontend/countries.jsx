@@ -288,22 +288,16 @@ var CountryTextProcessor = React.createClass({
       countryArray.forEach( function(country) {
           if ( country.slice(0,3) in countryDict ) {
             countryDict[ country.slice(0,3) ].push( country );
+
           } else {
             countryDict[ country.slice(0,3) ] = [ country ];
+
           }
       });
 
-//      this.setState( { "countryDict": countryDict } );
-
       return { "countryDict": countryDict };
     },
-    componentDidMount: function() {
-      console.log('COMPONENTDIDMOUNT COUNTRIES');
-    },
     render: function() {
-      console.log('RENDER COUNTRIES');
-      console.log('this.state.countryDict');
-      console.log(this.state.countryDict);
 
       return (
         <div>

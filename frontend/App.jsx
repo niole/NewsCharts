@@ -48,21 +48,13 @@ var Charts = React.createClass({
 
         var tweetWordsArray = [];
         data.forEach( function( tweet ) {
-//          console.log("tweet");
-//          console.log(tweet);
 
           var tweetArray = tweet.split(" ");
           tweetArray.forEach( function( twit ) {
-//            console.log('twit');
-//            console.log(twit);
+            if ( /[A-Z]/.test( twit ) ) {
+              tweetWordsArray.push( twit );
+            }
 
-//             if ( isNaN( twit.slice(0,1) ) && twit.slice(0,1) !== "@" &&
-//                 twit.slice(0,1) !== '"' && twit.slice(0,1) !== "#" &&
-//                  twit.slice(0,1) !== "-" && twit.slice(0,1) !== "(" &&
-//                   twit.slice(0,1) === twit.slice(0,1).toUpperCase() ) {
-                tweetWordsArray.push( twit );
-
-           //    }
            });
         });
         console.log('tweetWordsArray (only capitalized words)');
@@ -88,19 +80,16 @@ var Charts = React.createClass({
 
     var countryHistDict = {};
 
+    var totalMentions = 0;
+
     var treemapData = [];
     //  {label: "China", value: 1364},
 
+    /* Need to convert values to percents */
     var pieData = [];
 //      {label: 'Margarita', value: 20.0},
 
     this.state.tweets.forEach( function(tweet) {
-
-      console.log('inside RENDER APP forEach');
-      console.log('this.props.countryDict');
-      console.log(this.props.countryDict);
-      console.log('countryHistDict');
-      console.log(countryHistDict);
 
       /* If the first three letters of the capitalized word are a key in
        * the dictionary of countries*/
@@ -113,8 +102,12 @@ var Charts = React.createClass({
             if ( country in countryHistDict ) {
               countryHistDict[ country ] += 1;
 
+              totalMentions += 1;
+
               } else {
                 countryHistDict[ country ] = 1;
+
+                totalMentions += 1;
 
               }
           }
@@ -123,9 +116,12 @@ var Charts = React.createClass({
     }.bind(this));
 
     for ( var country in countryHistDict ) {
+
       if ( countryHistDict.hasOwnProperty( country ) ) {
-        treemapData.push ( { "label": country, "value": countryHistDict.country } );
-        pieData.push ( { "label": country, "value": countryHistDict.country } );
+
+        treemapData.push ( { label: country, value: countryHistDict[ country ] } );
+
+        pieData.push ( { "label": country, "value": ( ( countryHistDict[ country ] / totalMentions ) * 100 ).toFixed(1) } );
       }
     }
 
@@ -136,10 +132,10 @@ var Charts = React.createClass({
 
         <a onClick={this.getTweets} className="waves-effect waves-light btn"><i className="mdi-file-cloud left"></i>button</a>
 
-        <PieChart data={pieData} width={400} height={400}
-          radius={100} innerRadius={20} title="Pie Chart"/>
+        <PieChart data={pieData} width={800} height={800}
+          radius={250} innerRadius={20} title="Pie Chart"/>
 
-        <Treemap  data={treemapData} width={450} height={250} textColor="#484848"
+        <Treemap  data={treemapData} width={600} height={500} textColor="#484848"
           fontSize="10px" title="Treemap"/>
       </div>
     );
