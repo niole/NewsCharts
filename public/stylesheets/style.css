@@ -1,0 +1,16 @@
+/*.path {
+  outline: 2px dotted red;
+
+}*/
+
+.rd3-piechart-text {
+  opacity: 0;
+  position: relative;
+
+}
+
+.rd3-piechart-text:hover {
+  opacity: 1;
+  font-size: 300%;
+  transition: .3s ease-in;
+}

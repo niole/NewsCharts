@@ -19,9 +19,6 @@ var Charts = React.createClass({
 
   },
   getInitialState: function() {
-    console.log('GETINITIALSTATE APP');
-    console.log('this.props.countryDict');
-    console.log(this.props.countryDict);
 
     /* STATE:
      *
@@ -32,11 +29,6 @@ var Charts = React.createClass({
     return ( { "tweets": [], "countryDict": {} } );
   },
   componentDidMount: function() {
-
-    console.log('COMPONENTDIDMOUNT APP');
-    console.log('this.props.countryDict');
-    console.log(this.props.countryDict);
-
 
     $.ajax({
       url: "/stream/gettweets/BBCWorld",
@@ -57,8 +49,6 @@ var Charts = React.createClass({
 
            });
         });
-        console.log('tweetWordsArray (only capitalized words)');
-        console.log(tweetWordsArray);
 
       this.setState( { "tweets": tweetWordsArray, "countryDict": this.props.countryDict } );
       }.bind(this),
@@ -73,10 +63,6 @@ var Charts = React.createClass({
   },
   // render the line chart and radial heatmap
   render: function() {
-
-    console.log('RENDER APP');
-    console.log('this.props.countryDict');
-    console.log(this.props.countryDict);
 
     var countryHistDict = {};
 
@@ -119,7 +105,7 @@ var Charts = React.createClass({
 
       if ( countryHistDict.hasOwnProperty( country ) ) {
 
-        treemapData.push ( { label: country, value: countryHistDict[ country ] } );
+        treemapData.push ( { label: country, value: ( ( countryHistDict[ country ] / totalMentions ) * 100 ).toFixed(1) } );
 
         pieData.push ( { "label": country, "value": ( ( countryHistDict[ country ] / totalMentions ) * 100 ).toFixed(1) } );
       }
