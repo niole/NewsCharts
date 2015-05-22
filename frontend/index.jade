@@ -1,9 +1,27 @@
 extends layout
 
 block content
+  //Import jQuery before materialize.js
+  script(type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js")
+  script(type="text/javascript" src="js/materialize.min.js")
   |<div id="container"/>
   //- inject:js
+  |<script type="text/jsx" src="js/Charts.jsx"/>
   |<script type="text/jsx" src="js/App.jsx"/>
-  |<script type="text/jsx" src="js/countries.jsx"/>
-  |<script type="text/jsx" src="js/TweetProcessor"/>
+  |<script type="text/jsx" src="js/TweetCollection.jsx"/>
+  |<script type="text/jsx" src="js/TweetContainer.jsx"/>
+
+  |<script type="text/jsx" src="js/CountryList.jsx"/>
+
+  |<script type="text/jsx" src="js/PieChart/Piechart.jsx"/>
+  |<script type="text/jsx" src="js/PieChart/Arc.jsx"/>
+  |<script type="text/jsx" src="js/PieChart/Dataseries.jsx"/>
+
+  |<script type="text/jsx" src="js/PieChart/charts/BasicChart.jsx"/>
+  |<script type="text/jsx" src="js/PieChart/charts/Chart.jsx"/>
+  |<script type="text/jsx" src="js/PieChart/charts/LegendChart.jsx"/>
+  |<script type="text/jsx" src="js/PieChart/charts/Legend.jsx"/>
+
+
+
   //- endinject

@@ -16,7 +16,7 @@ var path = {
   DEST: 'views/',
   DEST_BUILD: 'public/js/',
   DEST_SRC: 'public/src/',
-  ENTRY_POINT: './frontend/countries.jsx'
+  ENTRY_POINT: './frontend/App.jsx'
 };
 
 gulp.task('copy', function(){

@@ -1,8 +1,8 @@
 'use strict';
 
 var React = require('react');
-var DataSeries = require('./DataSeries');
-var Chart = require('../common').Chart;
+var DataSeries = require('./DataSeries.jsx');
+var Chart = require('./charts/Chart.jsx');
 
 
 module.exports = React.createClass({
@@ -16,6 +16,7 @@ module.exports = React.createClass({
   },
 
   propTypes: {
+    getCountrysTweets: React.PropTypes.func,
     radius: React.PropTypes.number,
     cx: React.PropTypes.number,
     cy: React.PropTypes.number,
@@ -34,21 +35,22 @@ module.exports = React.createClass({
 
     return (
       React.createElement(Chart, {
-        width: props.width, 
-        height: props.height, 
+        width: props.width,
+        height: props.height,
         title: props.title
-      }, 
-        React.createElement("g", {className: "rd3-piechart"}, 
+      },
+        React.createElement("g", {className: "rd3-piechart"},
           React.createElement(DataSeries, {
-            labelTextFill: props.labelTextFill, 
-            valueTextFill: props.valueTextFill, 
-            labels: labels, 
-            colors: props.colors, 
-            transform: transform, 
-            data: data, 
-            width: props.width, 
-            height: props.height, 
-            radius: props.radius, 
+            getCountrysTweets: props.getCountrysTweets,
+            labelTextFill: props.labelTextFill,
+            valueTextFill: props.valueTextFill,
+            labels: labels,
+            colors: props.colors,
+            transform: transform,
+            data: data,
+            width: props.width,
+            height: props.height,
+            radius: props.radius,
             innerRadius: props.innerRadius}
           )
         )

@@ -16,7 +16,8 @@ module.exports = React.createClass({
     innerRadius: React.PropTypes.number,
     outerRadius: React.PropTypes.number,
     labelTextFill: React.PropTypes.string,
-    valueTextFill: React.PropTypes.string
+    valueTextFill: React.PropTypes.string,
+    getCountrysTweets: React.PropTypes.func
   },
 
   getDefaultProps:function() {
@@ -27,6 +28,7 @@ module.exports = React.createClass({
   },
 
   render:function() {
+
     var props = this.props;
     var arc = d3.svg.arc()
       .innerRadius(props.innerRadius)
@@ -43,47 +45,58 @@ module.exports = React.createClass({
     var t = ("translate(" + x + "," + y + ")");
 
     return (
-      React.createElement("g", {className: "rd3-piechart-arc"}, 
+      React.createElement("g", {className: "rd3-piechart-arc"},
         React.createElement("path", {
-          d: arc(), 
+          onClick: this.getTweets,
+          d: arc(),
           fill: props.fill}
-        ), 
+        ),
         React.createElement("line", {
-          x1: "0", 
-          x2: "0", 
-          y1: -radius - 2, 
-          y2: -radius - 26, 
-          stroke: props.labelTextFill, 
-          transform: rotate, 
+          x1: "0",
+          x2: "0",
+          y1: -radius - 2,
+          y2: -radius - 26,
+          stroke: props.labelTextFill,
+          transform: rotate,
           style: {
             'fill': props.labelTextFill,
             'strokeWidth': 2
           }
         }
-        ), 
+        ),
         React.createElement("text", {
-          className: "rd3-piechart-label", 
-          transform: t, 
-          dy: ".35em", 
+          className: "rd3-piechart-label",
+          transform: t,
+          dy: ".35em",
           style: {
             'textAnchor': 'middle',
             'fill': props.labelTextFill,
             'shapeRendering': 'crispEdges'
-          }}, 
+          }},
           props.label
-        ), 
+        ),
         React.createElement("text", {
-          className: "rd3-piechart-text", 
-          transform: ("translate(" + arc.centroid() + ")"), 
-          dy: ".35em", 
+          className: "rd3-piechart-text",
+          transform: ("translate(" + arc.centroid() + ")"),
+          dy: ".35em",
           style: {
             'shapeRendering': 'crispEdges',
             'textAnchor': 'middle',
             'fill': props.valueTextFill
-          }}, 
+          }},
           props.value + '%'
         )
       )
     );
+  },
+  getTweets: function(e) {
+    e.preventDefault();
+
+    var country = this.props.label;
+
+    if ( country !== null ) {
+      this.props.getCountrysTweets( country );
+    }
+
   }
 });

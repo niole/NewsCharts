@@ -12,15 +12,17 @@ var client = new Twitter({
   access_token_secret: process.env.ACCESS_TOKEN_SECRET,
 });
 
+/* get past 200 tweets from this news service */
 router.post('/gettweets/:SN', function(req, res) {
   var SN = req.params.SN;
   console.log('Twitter client GET with sn=' + SN);
   client.get("statuses/user_timeline", { screen_name: SN, count: 200 }, function(error, tweets, response){
     if (!error) {
-      res.json(_.map(tweets, function(x) { return x.text; }));
-    }
+     // res.json(_.map(tweets, function(x) { return x.text; }));
+      res.json( tweets );
     console.log('error');
     console.log(error);
+    }
   });
 });
 
