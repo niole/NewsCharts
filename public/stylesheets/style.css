@@ -64,8 +64,8 @@ blockquote.twitter-tweet a:focus {
 
 /* for when element enters the page */
 .example-enter {
-  opacity: 0.01;
-  transition: opacity .5s ease-in;
+  opacity: 0.5;
+  transition: opacity 1s ease-in;
 }
 
 .example-enter.example-enter-active {
@@ -75,11 +75,11 @@ blockquote.twitter-tweet a:focus {
 /* for when element leaves the page */
 .example-leave {
   opacity: 1;
-  transition: opacity .5s ease-in;
+  transition: opacity 1s ease-in;
 }
 
 .example-leave.example-leave-active {
-  opacity: 0.01;
+  opacity: 0.5;
 }
 
 /* for when componenet initiall mounts */

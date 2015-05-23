@@ -5,23 +5,37 @@ var TweetCollection = require('./TweetCollection.jsx');
 
 var TweetContainer = React.createClass({
   propTypes: {
-    tweets: React.PropTypes.array
+    tweets: React.PropTypes.array,
+    index: React.PropTypes.number
+  },
+  getInitialState: function() {
+    return ( { "indexTopTweet": this.props.index } );
   },
   render: function() {
     return (
       <div className="tweet-container">
         <nav>
-          <div class="nav-wrapper"/>
+          <div className="nav-wrapper" onClick={this.scrollUp}/>
         </nav>
-        <TweetCollection tweets={this.props.tweets} />
+          <TweetCollection indexTopTweet={this.state.indexTopTweet} tweets={this.props.tweets}/>
         <nav>
-          <div class="nav-wrapper"/>
+          <div className="nav-wrapper" onClick={this.scrollDown}/>
         </nav>
-
       </div>
     );
+  },
+  scrollUp: function(e) {
+    e.preventDefault();
+    if ( this.state.indexTopTweet > 0 ) {
+      this.setState( { "indexTopTweet": this.state.indexTopTweet - 1 } );
+    }
+  },
+  scrollDown: function(e) {
+    e.preventDefault();
+//    if ( this.state.indexTopTweet < this.state.tweets.length - 1 ) {
+    this.setState( { "indexTopTweet": this.state.indexTopTweet + 1 } );
+ //   }
   }
-
 });
 
 module.exports = TweetContainer;

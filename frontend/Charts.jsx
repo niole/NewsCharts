@@ -13,7 +13,11 @@ var Charts = React.createClass({
   },
 
   getInitialState: function() {
-    return ( { "tweetWords": [], "countrysTweets": [], "tweets": [], "countryDict": {} } );
+    return ( { "indexTopTweet": 0,
+            "tweetWords": [],
+            "countrysTweets": [],
+            "tweets": [],
+            "countryDict": {} } );
   },
   componentDidMount: function() {
     console.log('COMPONENETDIDMOUTN CHARTS');
@@ -80,7 +84,7 @@ var Charts = React.createClass({
       <div className='container'>
         <div class="row">
           <div class="col s12">
-            <TweetContainer tweets={this.state.countrysTweets} />
+            <TweetContainer index={this.state.indexTopTweet} tweets={this.state.countrysTweets} />
           </div>
           <div class="col s6 offset-s6 grid-example">
             <div className="charts">
@@ -107,14 +111,7 @@ var Charts = React.createClass({
 
     });
 
-    this.setState( { "countrysTweets": countrystweet } );
-  },
-  scrollUp: function(e) {
-    e.preventDefault();
-    console.log('up');
-  },
-  scrollDown: function(e) {
-    e.preventDefault();
+    this.setState( { "indexTopTweet": 0, "countrysTweets": countrystweet } );
   }
 });
 
