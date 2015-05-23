@@ -1,8 +1,11 @@
 /** @jsx React.DOM */
 "use strict";
 
-var React = require('react');
-//var Tweet = require('./Tweet.jsx');
+//var React = require('react');
+var React = require('react/addons');
+//var classSet = addons.classSet;
+var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
 
 var Tweet = React.createClass({
   propTypes: {
@@ -28,6 +31,7 @@ var Tweet = React.createClass({
  }
 });
 
+
 var TweetCollection = React.createClass({
   propTypes: {
     tweets: React.PropTypes.array,
@@ -37,7 +41,7 @@ var TweetCollection = React.createClass({
     return  ( { "indexTopTweet": 0 } );
   },
   // Render our tweets
-  render: function(){
+  render: function() {
     console.log('RENDER TWEETCOLLECTIONS');
 
     // Build list items of single tweet components using map
@@ -54,10 +58,15 @@ var TweetCollection = React.createClass({
       }
     // Return ul filled with our mapped tweets
     return (
-      React.createElement( "ul", {
-        className: "tweets"
-      },
-      content
+      React.createElement( ReactCSSTransitionGroup, {
+        transitionName:"example",
+        transitionAppear: "true"
+        },
+        React.createElement( "ul", {
+          className: "tweets"
+        },
+        content
+        )
       )
     );
   }
