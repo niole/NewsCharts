@@ -9,7 +9,7 @@ var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 var Tweet = React.createClass({
   propTypes: {
-    tweet: React.PropTypes.object
+    tweet: React.PropTypes.object,
   },
   render: function(){
     var tweet = this.props.tweet;
@@ -35,22 +35,22 @@ var Tweet = React.createClass({
 var TweetCollection = React.createClass({
   propTypes: {
     tweets: React.PropTypes.array,
-    indexTopTweet: React.PropTypes.number
+    indexTopTweet: React.PropTypes.number,
+    indexLastTweet: React.PropTypes.number
   },
   getInitialState: function() {
-    console.log('GETINITSTATE TWEETCOLLECTION');
-    return  ( { "indexTopTweet": this.props.indexTopTweet } );
+    return  ( { "indexTopTweet": this.props.indexTopTweet,
+                "indexLastTweet": this.props.indexLastTweet } );
   },
   // Render our tweets
   render: function() {
-    console.log('RENDER TWEETCOLLECTIONS');
 
     // Build list items of single tweet components using map
       var content = [];
 
       for ( var i = this.props.indexTopTweet;
-           i < this.props.indexTopTweet + 5 && i < this.props.tweets.length;
-           i++ ) {
+           i < this.props.indexTopTweet + this.props.indexLastTweet; i++ ) {
+             console.log('INSDIE FOR LOOP: '+i);
 
           content.push(
             React.createElement( Tweet, {

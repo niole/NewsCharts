@@ -3,7 +3,6 @@
 
 var React = require('react');
 var PieChart = require('./PieChart/PieChart.jsx');
-var Treemap = require('react-d3/treemap').Treemap;
 var TweetContainer = require('./TweetContainer.jsx');
 
 var Charts = React.createClass({
@@ -13,8 +12,8 @@ var Charts = React.createClass({
   },
 
   getInitialState: function() {
-    return ( { "showContainer": "none",
-            "indexTopTweet": 0,
+    return ( { "indexTopTweet": 0,
+            "indexLastTweet": 1,
             "tweetWords": [],
             "countrysTweets": [],
             "tweets": [],
@@ -29,11 +28,8 @@ var Charts = React.createClass({
       success: function(data) {
         var tweetWordsArray = [];
         data.forEach( function( tweet ) {
-
           var tweetArray = tweet.text.split(" ");
-
           tweetArray.forEach( function( twit ) {
-
             if ( /[A-Z]/.test( twit ) ) {
               tweetWordsArray.push( twit );
             }
@@ -41,19 +37,16 @@ var Charts = React.createClass({
         });
         this.setState( { "tweets": data, "tweetWords": tweetWordsArray, "countryDict": this.props.countryDict } );
       }.bind(this),
-
       error: function(xhr,status,err) {
         console.error(this.props.url,status.err.toString());
       }.bind(this)
     });
-
   },
   // render the line chart and radial heatmap
   render: function() {
 
     var countryHistDict = {};
     var totalMentions = 0;
-    var treemapData = [];
     var pieData = [];
 
     this.state.tweetWords.forEach( function(tweet) {
@@ -77,16 +70,18 @@ var Charts = React.createClass({
 
     for ( var country in countryHistDict ) {
       if ( countryHistDict.hasOwnProperty( country ) ) {
-        treemapData.push ( { "label": country, "value": ( ( countryHistDict[ country ] / totalMentions ) * 100 ).toFixed(1) } );
         pieData.push ( { "label": country, "value": ( ( countryHistDict[ country ] / totalMentions ) * 100 ).toFixed(1) } );
       }
     }
+
+    console.log('this.state.lasttweet');
+    console.log(this.state.indexLastTweet);
 
     return (
       <div className='charts-div'>
 
             <div className="box-holder">
-              <TweetContainer index={this.state.indexTopTweet} tweets={this.state.countrysTweets} />
+              <TweetContainer indexLastTweet={this.state.indexLastTweet} index={this.state.indexTopTweet} tweets={this.state.countrysTweets} />
             </div>
 
 
@@ -95,15 +90,14 @@ var Charts = React.createClass({
               <PieChart getCountrysTweets={this.getCountrysTweets} data={pieData} width={700} height={700}
               radius={250} innerRadius={20} title="Pie Chart"/>
 
-              <Treemap  data={treemapData} width={600} height={500} textColor="#484848"
-              fontSize="10px" title="Treemap"/>
-
             </div>
 
       </div>
     );
   },
-  getCountrysTweets: function( country, block ) {
+  getCountrysTweets: function( country ) {
+
+    console.log('INSIDE GETCOUNTRYSTWEETS');
 
     var countrystweet = [];
     this.state.tweets.forEach( function ( tweet) {
@@ -112,7 +106,7 @@ var Charts = React.createClass({
       }
     });
 
-    this.setState( { "showContainer": block, "indexTopTweet": 0, "countrysTweets": countrystweet } );
+    this.setState( { "countrysTweets": countrystweet } );
   }
 });
 

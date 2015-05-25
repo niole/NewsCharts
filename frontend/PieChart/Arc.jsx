@@ -95,7 +95,7 @@ module.exports = React.createClass({
     var country = this.props.label;
 
     if ( country !== null ) {
-      this.props.getCountrysTweets( country, "block"  );
+      this.props.getCountrysTweets( country );
     }
 
   }
