@@ -6,7 +6,13 @@ var TweetCollection = require('./TweetCollection.jsx');
 var TweetContainer = React.createClass({
   propTypes: {
     tweets: React.PropTypes.array,
-    index: React.PropTypes.number
+    index: React.PropTypes.number,
+    showContainer: React.PropTypes.string
+  },
+  getDefaultProps: function() {
+    return {
+    showContainer: "none"
+    };
   },
   getInitialState: function() {
     return ( { "indexTopTweet": this.props.index } );
@@ -22,6 +28,8 @@ var TweetContainer = React.createClass({
           <div className="nav-wrapper" onClick={this.scrollDown}/>
         </nav>
       </div>
+
+
     );
   },
   scrollUp: function(e) {

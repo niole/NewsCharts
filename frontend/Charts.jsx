@@ -13,7 +13,8 @@ var Charts = React.createClass({
   },
 
   getInitialState: function() {
-    return ( { "indexTopTweet": 0,
+    return ( { "showContainer": "none",
+            "indexTopTweet": 0,
             "tweetWords": [],
             "countrysTweets": [],
             "tweets": [],
@@ -80,38 +81,38 @@ var Charts = React.createClass({
         pieData.push ( { "label": country, "value": ( ( countryHistDict[ country ] / totalMentions ) * 100 ).toFixed(1) } );
       }
     }
+
     return (
-      <div className='container'>
-        <div class="row">
-          <div class="col s12">
-            <TweetContainer index={this.state.indexTopTweet} tweets={this.state.countrysTweets} />
-          </div>
-          <div class="col s6 offset-s6 grid-example">
+      <div className='charts-div'>
+
+            <div className="box-holder">
+              <TweetContainer index={this.state.indexTopTweet} tweets={this.state.countrysTweets} />
+            </div>
+
+
             <div className="charts">
 
-              <PieChart getCountrysTweets={this.getCountrysTweets} data={pieData} width={800} height={800}
+              <PieChart getCountrysTweets={this.getCountrysTweets} data={pieData} width={700} height={700}
               radius={250} innerRadius={20} title="Pie Chart"/>
 
               <Treemap  data={treemapData} width={600} height={500} textColor="#484848"
               fontSize="10px" title="Treemap"/>
 
             </div>
-          </div>
-        </div>
+
       </div>
     );
   },
-  getCountrysTweets: function( country ) {
+  getCountrysTweets: function( country, block ) {
 
     var countrystweet = [];
     this.state.tweets.forEach( function ( tweet) {
       if ( tweet.text.indexOf( country ) > -1 ) {
         countrystweet.push( tweet );
       }
-
     });
 
-    this.setState( { "indexTopTweet": 0, "countrysTweets": countrystweet } );
+    this.setState( { "showContainer": block, "indexTopTweet": 0, "countrysTweets": countrystweet } );
   }
 });
 

@@ -48,11 +48,14 @@ var TweetCollection = React.createClass({
     // Build list items of single tweet components using map
       var content = [];
 
-      for ( var i = this.props.indexTopTweet; i < this.props.indexTopTweet + 5 && i < this.props.tweets.length; i++ ) {
+      for ( var i = this.props.indexTopTweet;
+           i < this.props.indexTopTweet + 5 && i < this.props.tweets.length;
+           i++ ) {
 
           content.push(
             React.createElement( Tweet, {
               key: this.props.tweets[i].id,
+              id: i,
               tweet: this.props.tweets[i],
               })
           );
