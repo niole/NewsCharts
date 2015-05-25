@@ -73,10 +73,6 @@ var Charts = React.createClass({
         pieData.push ( { "label": country, "value": ( ( countryHistDict[ country ] / totalMentions ) * 100 ).toFixed(1) } );
       }
     }
-
-    console.log('this.state.lasttweet');
-    console.log(this.state.indexLastTweet);
-
     return (
       <div className='charts-div'>
 
