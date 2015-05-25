@@ -14,6 +14,10 @@ var TweetContainer = React.createClass({
     return ( { "indexLastTweet": this.props.indexLastTweet,
                 "indexTopTweet": this.props.index } );
   },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState( { "indexLastTweet": nextProps.indexLastTweet,
+                      "indexTopTweet": nextProps.index } );
+  },
   render: function() {
 
     console.log('this.props.tweets.length: '+this.props.tweets.length);
@@ -45,16 +49,22 @@ var TweetContainer = React.createClass({
       this.setState( { "indexTopTweet": this.state.indexTopTweet - 1,
                         "indexLastTweet": this.state.indexLastTweet - 1 } );
     }
+    if ( this.state.indexTopTweet === 0 && this.state.indexLastTweet > 1 ) {
+      this.setState( { "indexLastTweet": this.state.indexLastTweet - 1 } );
+    }
   },
   scrollDown: function(e) {
     e.preventDefault();
-    if ( Math.abs(this.state.indexTopTweet - this.state.indexLastTweet) < 4 ) {
+    if ( Math.abs(this.state.indexTopTweet - this.state.indexLastTweet) < 5 ) {
       this.setState( { "indexLastTweet": this.state.indexLastTweet + 1 } );
     }
-    if ( Math.abs(this.state.indexTopTweet - this.state.indexLastTweet) === 4 &&
-          this.state.indexLastTweet < this.props.tweets.length - 1 ) {
+    if ( Math.abs(this.state.indexTopTweet - this.state.indexLastTweet) === 5 &&
+          this.state.indexLastTweet < this.props.tweets.length ) {
         this.setState( { "indexLastTweet": this.state.indexLastTweet + 1,
                           "indexTopTweet": this.state.indexTopTweet + 1 } );
+    }
+    if ( this.state.indexLastTweet === this.props.tweets.length ) {
+      console.log('there are no more tweets');
     }
 
   }

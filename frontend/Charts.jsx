@@ -106,7 +106,9 @@ var Charts = React.createClass({
       }
     });
 
-    this.setState( { "countrysTweets": countrystweet } );
+    this.setState( { "indexLastTweet": 1,
+                      "indexTopTweet": 0,
+                       "countrysTweets": countrystweet } );
   }
 });
 
