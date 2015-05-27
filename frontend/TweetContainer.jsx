@@ -20,6 +20,7 @@ var TweetContainer = React.createClass({
   },
   render: function() {
 
+
     console.log('this.props.tweets.length: '+this.props.tweets.length);
     console.log('indexLast: '+this.state.indexLastTweet);
     console.log('indextop: '+this.state.indexTopTweet);
@@ -63,10 +64,6 @@ var TweetContainer = React.createClass({
         this.setState( { "indexLastTweet": this.state.indexLastTweet + 1,
                           "indexTopTweet": this.state.indexTopTweet + 1 } );
     }
-    if ( this.state.indexLastTweet === this.props.tweets.length ) {
-      console.log('there are no more tweets');
-    }
-
   }
 });
 

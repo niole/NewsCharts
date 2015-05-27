@@ -6,15 +6,11 @@ var Chart = require('./charts/Chart.jsx');
 
 
 module.exports = React.createClass({
-
-  displayName: 'PieChart',
-
   getDefaultProps: function() {
-    return {
-      title: ''
-    };
-  },
-
+     return {
+       title: ''
+     };
+   },
   propTypes: {
     getCountrysTweets: React.PropTypes.func,
     radius: React.PropTypes.number,

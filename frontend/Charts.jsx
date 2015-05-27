@@ -2,8 +2,9 @@
 /*global React*/
 
 var React = require('react');
-var PieChart = require('./PieChart/PieChart.jsx');
-var TweetContainer = require('./TweetContainer.jsx');
+//var PieChart = require('./PieChart/PieChart.jsx');
+var ChartBuilder = require('./ChartBuilder.jsx');
+//var TweetContainer = require('./TweetContainer.jsx');
 
 var Charts = React.createClass({
 
@@ -12,99 +13,38 @@ var Charts = React.createClass({
   },
 
   getInitialState: function() {
-    return ( { "indexTopTweet": 0,
-            "indexLastTweet": 1,
-            "tweetWords": [],
-            "countrysTweets": [],
-            "tweets": [],
-            "countryDict": {} } );
+    return ( { "newsSites": [], "displayName": "" } );
   },
-  componentDidMount: function() {
-    console.log('COMPONENETDIDMOUTN CHARTS');
-    $.ajax({
-      url: "/stream/gettweets/BBCWorld",
-      type: 'POST',
-      dataType: 'json',
-      success: function(data) {
-        var tweetWordsArray = [];
-        data.forEach( function( tweet ) {
-          var tweetArray = tweet.text.split(" ");
-          tweetArray.forEach( function( twit ) {
-            if ( /[A-Z]/.test( twit ) ) {
-              tweetWordsArray.push( twit );
-            }
-          });
-        });
-        this.setState( { "tweets": data, "tweetWords": tweetWordsArray, "countryDict": this.props.countryDict } );
-      }.bind(this),
-      error: function(xhr,status,err) {
-        console.error(this.props.url,status.err.toString());
-      }.bind(this)
-    });
-  },
-  // render the line chart and radial heatmap
+
+/* Maps over array of site names in newsSites and generates piecharts and their associated twitter feeds through ChartBuilder */
   render: function() {
 
-    var countryHistDict = {};
-    var totalMentions = 0;
-    var pieData = [];
+    var ChartsAndTweets = this.state.newsSites.map( function(site) {
+      return (
+        <div className="single-chart">
+          <ChartBuilder displayName={this.state.displayName} site={site} countryDict={this.props.countryDict} />
+        </div>
+      );
+    }.bind(this) );
 
-    this.state.tweetWords.forEach( function(tweet) {
-
-      /* DOESN'T NECESSARILLY MAKE SENSE. TODO */
-      if ( tweet.length > 2 && tweet.slice(0,3) in this.props.countryDict ) {
-        this.props.countryDict[ tweet.slice(0,3) ].forEach( function( country ) {
-          if ( tweet.indexOf(country) > -1 ) {
-            if ( country in countryHistDict ) {
-              countryHistDict[ country ] += 1;
-              totalMentions += 1;
-
-            } else {
-              countryHistDict[ country ] = 1;
-              totalMentions += 1;
-            }
-          }
-        }.bind(this));
-      }
-    }.bind(this));
-
-    for ( var country in countryHistDict ) {
-      if ( countryHistDict.hasOwnProperty( country ) ) {
-        pieData.push ( { "label": country, "value": ( ( countryHistDict[ country ] / totalMentions ) * 100 ).toFixed(1) } );
-      }
-    }
     return (
-      <div className='charts-div'>
+      <div className="pies-tweets-page">
 
-            <div className="box-holder">
-              <TweetContainer indexLastTweet={this.state.indexLastTweet} index={this.state.indexTopTweet} tweets={this.state.countrysTweets} />
-            </div>
+        <input type="text" placeholder="input a SN" ref="snfield"/>
 
+        <a className="waves-effect waves-light btn" onClick={this.getNews} ><i className="mdi-file-cloud right"></i>Submit</a>
 
-            <div className="charts">
-
-              <PieChart getCountrysTweets={this.getCountrysTweets} data={pieData} width={700} height={700}
-              radius={250} innerRadius={20} title="Pie Chart"/>
-
-            </div>
-
+        <div className="pie-charts">
+          {ChartsAndTweets}
+        </div>
       </div>
     );
   },
-  getCountrysTweets: function( country ) {
+  getNews: function(e){
+    e.preventDefault();
+    var SN = this.refs.snfield.getDOMNode().value.trim();
 
-    console.log('INSIDE GETCOUNTRYSTWEETS');
-
-    var countrystweet = [];
-    this.state.tweets.forEach( function ( tweet) {
-      if ( tweet.text.indexOf( country ) > -1 ) {
-        countrystweet.push( tweet );
-      }
-    });
-
-    this.setState( { "indexLastTweet": 1,
-                      "indexTopTweet": 0,
-                       "countrysTweets": countrystweet } );
+    this.setState( { "displayName": SN, "newsSites": this.state.newsSites.concat( [ SN ] ) } );
   }
 });
 

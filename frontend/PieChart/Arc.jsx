@@ -48,6 +48,7 @@ module.exports = React.createClass({
       React.createElement("g", {className: "rd3-piechart-arc"},
         React.createElement("path", {
           onClick: this.getTweets,
+          className: "path",
           d: arc(),
           fill: props.fill}
         ),
