@@ -2,9 +2,9 @@
   "name": "RenderMarkdownWithReact-express-browserify-gulp-jade-tutorial",
   "version": "1.0.0",
   "description": "Render markdown with ReactJS using the express framework, browserify for dependency resolution, the gulp build system, and jade templateing.",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node ./bin/www"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
     "browserify": "^9.0.8",

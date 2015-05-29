@@ -9,14 +9,19 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+
 // Database Routes
 var mongo = require('mongoskin');
-var db = mongo.db("mongodb://localhost:27017", {native_parser:true});
+var db = mongo.db("mongodb://localhost:27017/newscharts", {native_parser:true});
 
 var routes = require('./routes/index');
 var stream = require('./routes/stream');
 
 var app = express();
+//var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -35,11 +40,13 @@ app.use(function(req,res,next){
     next();
 });
 
-/* BELOW is so that your router can access
- *your database routes file.
- *My routes file is 'routes/rendermarkdown.js'*/
 app.use('/', routes);
 app.use('/stream', stream);
+
+/* GET home page. */
+app.get('/');
+
+
 
 /// catch 405 and forwarding to error handler
 app.use(function(req, res, next) {
@@ -71,6 +78,16 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
+
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});
+
 
 
 module.exports = app;
