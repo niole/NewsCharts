@@ -12,6 +12,7 @@ var CountryList = "Aruba." +
          "Armenia." +
          "America." +
          "USA." +
+         "US." +
          "Andorra." +
          "Angola." +
          "Samoa." +
