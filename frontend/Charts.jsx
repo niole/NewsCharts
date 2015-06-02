@@ -32,8 +32,9 @@ var Charts = React.createClass({
         <div className="pies-tweets-page">
 
           <input type="text" placeholder="input a SN" ref="snfield"/>
-
           <a className="waves-effect waves-light btn" onClick={this.getNews} ><i className="mdi-file-cloud right"></i>add site to listen for</a>
+
+
 
           <div className="pie-charts">
             {ChartsAndTweets}
@@ -44,9 +45,7 @@ var Charts = React.createClass({
   getNews: function(e){
     e.preventDefault();
     var SN = this.refs.snfield.getDOMNode().value.trim();
-
     this.setState( { "newsSites": this.state.newsSites.concat( [ SN ] ) } );
-
   }
 });
 

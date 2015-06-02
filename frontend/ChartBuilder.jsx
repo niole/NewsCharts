@@ -19,11 +19,6 @@ var ChartBuilder = React.createClass({
 
       var candidate = true;
 
-      console.log(this.props.site);
-      console.log(object.tweet.user.screen_name);
-
-//      if ( this.props.site === object.tweet.user.screen_name ) {
-
         if ( this.state.tweetObjectArray !== undefined ) {
           this.state.tweetObjectArray.forEach( function( TO ) {
 
@@ -39,7 +34,6 @@ var ChartBuilder = React.createClass({
             this.updateTweetState( object );
           }
         }
-       //}
       }.bind(this));
 
      return ( { "indexTopTweet": 0,
@@ -97,8 +91,6 @@ var ChartBuilder = React.createClass({
                              </div>);
       }
 
-
-
      return (
        <div className='charts-div'>
 
@@ -117,12 +109,41 @@ var ChartBuilder = React.createClass({
    },
    updateTweetState: function( object ) {
     console.log('UPDATETWEETSTATE');
+
+    var date = object.tweet.created_at;
+    var month = date[1];
+    var day = date[2];
+    var year = date[5];
+
+    if ( this.state.tweetObjectArray.length > 0 ) {
+      var dateTO = this.state.tweetObjectArray[0].tweet.created_at;
+      var monthTO = dateTO[1];
+      var dayTO = dateTO[2];
+      var yearTO = dateTO[5];
+
+      if ( monthTO === month && dayTO === day - 1 && year === yearTO ) {
+
+        var poppedTOA = this.state.tweetObjectArray.slice(1, this.state.tweetObjectArray.length);
+
+        this.setState( { "tweetObjectArray": poppedTOA.concat( [ object ] ) } );
+      }
+    this.setState( { "tweetObjectArray": this.state.tweetObjectArray.concat( [ object ] ) } );
+
+    }
+
     this.setState( { "tweetObjectArray": this.state.tweetObjectArray.concat( [ object ] ) } );
    },
    getTweetObjects: function() {
       console.log('GETTWEETOBJECTS');
 
-      socket.emit('SiteCA', [ {"countryArray": this.props.countryArray }, {"screen_name": this.props.site, "count": 20 } ] );
+      if ( this.state.tweetObjectArray.length === 0 ) {
+
+        socket.emit('SiteCA', [ {"countryArray": this.props.countryArray }, {"screen_name": this.props.site, "count": 200 } ] );
+      } else {
+
+        socket.emit('SiteCA', [ {"countryArray": this.props.countryArray }, {"screen_name": this.props.site, "count": 20 } ] );
+
+      }
 
    },
    getCountrysTweets: function( country ) {
