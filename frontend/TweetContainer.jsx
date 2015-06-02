@@ -19,8 +19,6 @@ var TweetContainer = React.createClass({
                       "indexTopTweet": nextProps.index } );
   },
   render: function() {
-
-
     console.log('this.props.tweets.length: '+this.props.tweets.length);
     console.log('indexLast: '+this.state.indexLastTweet);
     console.log('indextop: '+this.state.indexTopTweet);
@@ -37,8 +35,6 @@ var TweetContainer = React.createClass({
             <div className="nav-wrapper" onClick={this.scrollDown}/>
           </nav>
         </div>
-
-
       );
     } else {
       return ( <div/> );

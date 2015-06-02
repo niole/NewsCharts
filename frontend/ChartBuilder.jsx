@@ -5,76 +5,72 @@ var React = require('react');
 var PieChart = require('./PieChart/PieChart.jsx');
 var TweetContainer = require('./TweetContainer.jsx');
 
+
 var ChartBuilder = React.createClass({
 
+
    propTypes: {
-     countryDict: React.PropTypes.object,
-     site: React.PropTypes.string,
-     displayName: React.PropTypes.string
+     countryArray: React.PropTypes.array,
+     site: React.PropTypes.string
    },
    getInitialState: function() {
+   var socket = io.connect();
+
+
+    socket.on("state", function( object ) {
+      console.log('SOCKET STATE GIS');
+
+      var candidate = true;
+      if ( this.state.tweetObjectArray !== undefined ) {
+        this.state.tweetObjectArray.forEach( function( TO ) {
+          if ( TO.id === object.tweet.id ) {
+            candidate = false;
+          }
+        });
+        if ( candidate === true ) {
+          this.updateTweetState( object );
+        }
+      }
+      }.bind(this));
+
      return ( { "indexTopTweet": 0,
              "indexLastTweet": 1,
-             "wordsToExamine": [],
              "countrysTweets": [],
-             "tweets": [],
-             "displayName": this.props.displayName } );
+             "tweetObjectArray": [] });
+
    },
    componentDidMount: function() {
-    /* Takes site prop, gets site's tweets, and sets this.state.tweets and this.state.wordsToExamine*/
+      console.log('COMPONENTDIDMOUNT CHARTBUILDER');
 
-     $.ajax({
-       url: "/stream/gettweets/" + this.props.site,
-       type: 'POST',
-       dataType: 'json',
-       success: function(data) {
+      setInterval( this.getTweetObjects , 5000);
 
-
-        var tweetWordsArray = [];
-
-         data.forEach( function( tweet ) {
-           var tweetArray = tweet.text.split(" ");
-           tweetArray.forEach( function( twit ) {
-             if ( /[A-Z]/.test( twit ) ) {
-              tweetWordsArray.push( twit );
-             }
-           });
-         });
-
-         this.setState( { "tweets": data, "wordsToExamine": tweetWordsArray } );
-
-       }.bind(this),
-       error: function(xhr,status,err) {
-         console.error(this.props.url,status.err.toString());
-       }.bind(this)
-     });
-
-   },
+    },
    render: function() {
-    /* Filters through wordsToExamine, creates histogram of number of mentions per country, and creates data for the pie chart*/
+    console.log('this.tweetObjectArray');
+    console.log( this.state.tweetObjectArray );
+
+    /* creates histogram of number of mentions per country, and creates data for the pie chart based on tweetObjectArray*/
+
 
      var countryHistDict = {};
      var totalMentions = 0;
      var pieData = [];
 
-     this.state.wordsToExamine.forEach( function(tweet) {
 
-       /* DOESN'T NECESSARILLY MAKE SENSE. TODO */
-       if ( tweet.length > 2 && tweet.slice(0,3) in this.props.countryDict ) {
-         this.props.countryDict[ tweet.slice(0,3) ].forEach( function( country ) {
-           if ( tweet.indexOf(country) > -1 ) {
-             if ( country in countryHistDict ) {
-               countryHistDict[ country ] += 1;
-               totalMentions += 1;
+     this.state.tweetObjectArray.forEach( function( tweetObject ) {
 
-             } else {
-               countryHistDict[ country ] = 1;
-               totalMentions += 1;
-             }
-           }
-         }.bind(this));
-       }
-     }.bind(this));
+      if ( countryHistDict.hasOwnProperty( tweetObject.country ) ) {
+
+        countryHistDict[ tweetObject.country ] += 1;
+        totalMentions += 1;
+
+      } else {
+
+        countryHistDict[ tweetObject.country ] = 1;
+        totalMentions += 1;
+
+      }
+     });
 
      for ( var country in countryHistDict ) {
        if ( countryHistDict.hasOwnProperty( country ) ) {
@@ -86,10 +82,12 @@ var ChartBuilder = React.createClass({
 
      var tweetContainer = [];
      if ( this.state.countrysTweets.length > 0 ) {
-      tweetContainer.push( <div className="box-holder">
-                           <TweetContainer indexLastTweet={this.state.indexLastTweet} index={this.state.indexTopTweet} tweets={this.state.countrysTweets} />
-                           </div>);
+        tweetContainer.push( <div className="box-holder">
+                             <TweetContainer indexLastTweet={this.state.indexLastTweet} index={this.state.indexTopTweet} tweets={this.state.countrysTweets} />
+                             </div>);
       }
+
+
 
      return (
        <div className='charts-div'>
@@ -103,17 +101,28 @@ var ChartBuilder = React.createClass({
 
              </div>
 
+
        </div>
      );
+   },
+   updateTweetState: function( object ) {
+    console.log('UPDATETWEETSTATE');
+    this.setState( { "tweetObjectArray": this.state.tweetObjectArray.concat( [ object ] ) } );
+   },
+   getTweetObjects: function() {
+      console.log('GETTWEETOBJECTS');
+
+      socket.emit('SiteCA', [ {"countryArray": this.props.countryArray }, {"screen_name": this.props.site, "count": 20 } ] );
+
    },
    getCountrysTweets: function( country ) {
 
      console.log('INSIDE GETCOUNTRYSTWEETS');
 
      var countrystweet = [];
-     this.state.tweets.forEach( function ( tweet) {
-       if ( tweet.text.indexOf( country ) > -1 ) {
-        countrystweet.push( tweet );
+     this.state.tweetObjectArray.forEach( function ( object ) {
+       if ( object.tweet.text.indexOf( country ) > -1 ) {
+        countrystweet.push( object.tweet );
        }
      });
      console.log(' IN GETCOUNTRYSTWEETS countrystweet: '+countrystweet);
@@ -122,5 +131,6 @@ var ChartBuilder = React.createClass({
                       "countrysTweets": countrystweet });
   }
 });
+
 
 module.exports = ChartBuilder;

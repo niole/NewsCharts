@@ -8,6 +8,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var Twitter = require('twitter');
 
 
 // Database Routes
@@ -18,9 +19,9 @@ var routes = require('./routes/index');
 var stream = require('./routes/stream');
 
 var app = express();
-//var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
 
 
 app.set('views', path.join(__dirname, 'views'));
@@ -79,15 +80,59 @@ app.use(function(err, req, res, next) {
     });
 });
 
+
+var client = new Twitter({
+  consumer_key: process.env.CONSUMER_KEY,
+  consumer_secret: process.env.CONSUMER_SECRET,
+  access_token_key: process.env.ACCESS_TOKEN,
+  access_token_secret: process.env.ACCESS_TOKEN_SECRET
+});
+
 io.on('connection', function(socket){
   console.log('a user connected');
+
+  socket.on( 'SiteCA', function( object ) {
+
+      var countryArray = object[0].countryArray;
+
+      var params = object[1];
+      client.get('statuses/user_timeline', params, function(error, data){
+        console.log('CLIENT GET');
+
+
+        if (!error) {
+
+          for ( var j = 0; j < data.length; j++ ) {
+
+            var tweetText = " "+data[j].text;
+
+            for ( var i = 0; i < countryArray.length; i++ ) {
+              if (i !== countryArray.length - 1 &&
+                  countryArray[i] !== "Zimbabwe" &&
+                   tweetText.indexOf( countryArray[i] ) !== 0) {
+
+                if ( tweetText.indexOf( countryArray[i] ) > -1 ||
+                     tweetText.indexOf( countryArray[i].slice(0,1).toLowerCase() +
+                     countryArray[i].slice(1,countryArray.length)) > -1 ) {
+
+
+                    socket.emit( "state", { "country": countryArray[i], "tweet": data[j] } );
+
+                }
+              }
+
+            }
+
+          }
+      }
+    });
+
+  });
 });
 
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
 });
-
-
 
 module.exports = app;

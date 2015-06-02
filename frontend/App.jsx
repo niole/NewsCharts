@@ -12,26 +12,16 @@ var CountryTextProcessor = React.createClass({
     getInitialState: function() {
 
       var countryArray = CountryList.split(".");
-      var countryDict = {};
 
-      countryArray.forEach( function(country) {
-          if ( country.slice(0,3) in countryDict ) {
-            countryDict[ country.slice(0,3) ].push( country );
+      return { "countryArray": countryArray, "getTweets": "" };
 
-          } else {
-            countryDict[ country.slice(0,3) ] = [ country ];
-
-          }
-      });
-
-      return { "countryDict": countryDict };
     },
     render: function() {
 
       return (
 
         <div>
-          <Charts countryDict={this.state.countryDict} />
+          <Charts countryArray={this.state.countryArray} />
         </div>
 
       );

@@ -18,7 +18,6 @@ var CountryList = "Aruba." +
          "Azore and Cartier Islands." +
          "Austria." +
          "Anguilla." +
-         "ax ≈land Islands." +
          "Antarctica." +
          "Bahrain." +
          "Barbados." +
@@ -30,7 +29,6 @@ var CountryList = "Aruba." +
          "Belize." +
          "Bosnia and Herzegovina." +
          "Bolivia." +
-         "Saint Barthelemy." +
          "Myanmar." +
          "Benin." +
          "Belarus." +
@@ -78,6 +76,7 @@ var CountryList = "Aruba." +
          "Eritrea." +
          "El Salvador." +
          "Ethiopia." +
+         "England."+
          "Europa Island." +
          "Czech Republic." +
          "French Guiana." +
