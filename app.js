@@ -92,6 +92,7 @@ io.on('connection', function(socket){
   console.log('a user connected');
 
   socket.on( 'SiteCA', function( object ) {
+    console.log(' INSIDE SITECA SOCKET.ON');
 
       var countryArray = object[0].countryArray;
 

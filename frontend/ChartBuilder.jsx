@@ -7,8 +7,6 @@ var TweetContainer = require('./TweetContainer.jsx');
 
 
 var ChartBuilder = React.createClass({
-
-
    propTypes: {
      countryArray: React.PropTypes.array,
      site: React.PropTypes.string
@@ -16,18 +14,18 @@ var ChartBuilder = React.createClass({
    getInitialState: function() {
    var socket = io.connect();
 
-
     socket.on("state", function( object ) {
       console.log('SOCKET STATE GIS');
 
       var candidate = true;
       if ( this.state.tweetObjectArray !== undefined ) {
         this.state.tweetObjectArray.forEach( function( TO ) {
-          if ( TO.id === object.tweet.id ) {
+          if ( TO.tweet.id === object.tweet.id ) {
             candidate = false;
           }
         });
         if ( candidate === true ) {
+          console.log('UPDATING TWEETOBJECTSTATE');
           this.updateTweetState( object );
         }
       }
