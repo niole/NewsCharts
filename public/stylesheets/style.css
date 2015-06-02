@@ -2,11 +2,10 @@
  * css for d3 pie chart
  * * */
 
-.rd3-piechart-text {
+/*.rd3-piechart-text {
   opacity: 0;
   position: relative;
-  float: right;
-}
+}*/
 
 .rd3-piechart-text:hover {
   opacity: 1;

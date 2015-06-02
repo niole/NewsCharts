@@ -14,9 +14,8 @@ var Charts = React.createClass({
     return ( { "newsSites": [] } );
   },
 
-/* Maps over array of site names in newsSites and generates piecharts and their associated twitter feeds through ChartBuilder */
   render: function() {
-
+    /* Maps over array of site names in newsSites and generates piecharts and their associated twitter feeds through ChartBuilder */
 
         var ChartsAndTweets = this.state.newsSites.map( function(site) {
 
@@ -32,7 +31,7 @@ var Charts = React.createClass({
         <div className="pies-tweets-page">
 
           <input type="text" placeholder="input a SN" ref="snfield"/>
-          <a className="waves-effect waves-light btn" onClick={this.getNews} ><i className="mdi-file-cloud right"></i>add site to listen for</a>
+          <a className="waves-effect waves-light btn" onClick={this.getNews} ><i className="mdi-file-cloud right"></i>enter a news site's twitter handle</a>
 
 
 
@@ -45,7 +44,14 @@ var Charts = React.createClass({
   getNews: function(e){
     e.preventDefault();
     var SN = this.refs.snfield.getDOMNode().value.trim();
-    this.setState( { "newsSites": this.state.newsSites.concat( [ SN ] ) } );
+    if ( SN[0] === "@" ) {
+      console.log( SN.slice(1,SN.length));
+
+      this.setState( { "newsSites": this.state.newsSites.concat( [ SN.slice( 1, SN.length) ] ) } );
+
+    } else {
+      this.setState( { "newsSites": this.state.newsSites.concat( [ SN ] ) } );
+    }
   }
 });
 

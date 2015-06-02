@@ -12,10 +12,11 @@ var ChartBuilder = React.createClass({
      site: React.PropTypes.string
    },
    getInitialState: function() {
+     console.log('GIS');
+     /* listens for an event that is the name of the twitter handle visualized here and adds unique tweets to tweetObjectArray*/
    var socket = io.connect();
 
     socket.on(this.props.site, function( object ) {
-      console.log('SOCKET STATE GIS');
 
       var candidate = true;
 
@@ -30,7 +31,6 @@ var ChartBuilder = React.createClass({
 
           if ( candidate === true ) {
 
-            console.log('UPDATING TWEETOBJECTSTATE');
             this.updateTweetState( object );
           }
         }
@@ -43,23 +43,27 @@ var ChartBuilder = React.createClass({
 
    },
    componentDidMount: function() {
-      console.log('COMPONENTDIDMOUNT CHARTBUILDER');
+     console.log('GDM');
+     /* fires getTweetObjects every interval (in milliseconds) */
 
       setInterval( this.getTweetObjects , 5000);
 
+
     },
    render: function() {
-    console.log(this.props.site);
-    console.log('this.tweetObjectArray');
-    console.log( this.state.tweetObjectArray );
-
-    /* creates histogram of number of mentions per country, and creates data for the pie chart based on tweetObjectArray*/
-
+     console.log('RENDER');
+    /* creates histogram of number of mentions per country, creates data for the pie chart based on tweetObjectArray, also visualizes tweets*/
 
      var countryHistDict = {};
      var totalMentions = 0;
      var pieData = [];
 
+      if ( document.getElementById( this.props.site ) === null ) {
+        $('#loader').append(
+          <div className="progress">
+             <div className="indeterminate"></div>
+         </div> );
+      }
 
      this.state.tweetObjectArray.forEach( function( tweetObject ) {
 
@@ -92,13 +96,13 @@ var ChartBuilder = React.createClass({
       }
 
      return (
-       <div className='charts-div'>
+       <div id="loader" className='charts-div'>
 
               {tweetContainer}
 
              <div className="charts">
 
-               <PieChart displayName={this.props.site} getCountrysTweets={this.getCountrysTweets} data={pieData} width={700} height={700}
+               <PieChart id={this.props.site} displayName={this.props.site} getCountrysTweets={this.getCountrysTweets} data={pieData} width={700} height={700}
                radius={250} innerRadius={20} title={this.state.displayName}/>
 
              </div>
@@ -108,7 +112,8 @@ var ChartBuilder = React.createClass({
      );
    },
    updateTweetState: function( object ) {
-    console.log('UPDATETWEETSTATE');
+     console.log('UTS');
+     /* maintains an array of objects containing tweets tweeted within a 24 hr period*/
 
     var date = object.tweet.created_at;
     var month = date[1];
@@ -134,7 +139,8 @@ var ChartBuilder = React.createClass({
     this.setState( { "tweetObjectArray": this.state.tweetObjectArray.concat( [ object ] ) } );
    },
    getTweetObjects: function() {
-      console.log('GETTWEETOBJECTS');
+     console.log('GTO');
+     /* sends GET request to twitter REST api via a socket emit*/
 
       if ( this.state.tweetObjectArray.length === 0 ) {
 
@@ -147,16 +153,14 @@ var ChartBuilder = React.createClass({
 
    },
    getCountrysTweets: function( country ) {
-
-     console.log('INSIDE GETCOUNTRYSTWEETS');
+     /* waits for the name of country and then updates countrysTweets state in order to display tweets mentioning that country*/
 
      var countrystweet = [];
      this.state.tweetObjectArray.forEach( function ( object ) {
        if ( object.tweet.text.indexOf( country ) > -1 ) {
-        countrystweet.push( object.tweet );
+         countrystweet.push( object.tweet );
        }
      });
-     console.log(' IN GETCOUNTRYSTWEETS countrystweet: '+countrystweet);
      this.setState( { "indexLastTweet": 1,
                       "indexTopTweet": 0,
                       "countrysTweets": countrystweet });
