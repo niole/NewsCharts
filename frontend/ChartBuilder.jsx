@@ -14,21 +14,32 @@ var ChartBuilder = React.createClass({
    getInitialState: function() {
    var socket = io.connect();
 
-    socket.on("state", function( object ) {
+    socket.on(this.props.site, function( object ) {
       console.log('SOCKET STATE GIS');
 
       var candidate = true;
-      if ( this.state.tweetObjectArray !== undefined ) {
-        this.state.tweetObjectArray.forEach( function( TO ) {
-          if ( TO.tweet.id === object.tweet.id ) {
-            candidate = false;
+
+      console.log(this.props.site);
+      console.log(object.tweet.user.screen_name);
+
+//      if ( this.props.site === object.tweet.user.screen_name ) {
+
+        if ( this.state.tweetObjectArray !== undefined ) {
+          this.state.tweetObjectArray.forEach( function( TO ) {
+
+            if ( TO.tweet.id === object.tweet.id ) {
+
+              candidate = false;
+            }
+          });
+
+          if ( candidate === true ) {
+
+            console.log('UPDATING TWEETOBJECTSTATE');
+            this.updateTweetState( object );
           }
-        });
-        if ( candidate === true ) {
-          console.log('UPDATING TWEETOBJECTSTATE');
-          this.updateTweetState( object );
         }
-      }
+       //}
       }.bind(this));
 
      return ( { "indexTopTweet": 0,
@@ -44,6 +55,7 @@ var ChartBuilder = React.createClass({
 
     },
    render: function() {
+    console.log(this.props.site);
     console.log('this.tweetObjectArray');
     console.log( this.state.tweetObjectArray );
 
@@ -94,7 +106,7 @@ var ChartBuilder = React.createClass({
 
              <div className="charts">
 
-               <PieChart displayName={this.state.displayName} getCountrysTweets={this.getCountrysTweets} data={pieData} width={700} height={700}
+               <PieChart displayName={this.props.site} getCountrysTweets={this.getCountrysTweets} data={pieData} width={700} height={700}
                radius={250} innerRadius={20} title={this.state.displayName}/>
 
              </div>

@@ -97,6 +97,8 @@ io.on('connection', function(socket){
       var countryArray = object[0].countryArray;
 
       var params = object[1];
+      console.log('params');
+      console.log(params);
       client.get('statuses/user_timeline', params, function(error, data){
         console.log('CLIENT GET');
 
@@ -115,9 +117,10 @@ io.on('connection', function(socket){
                 if ( tweetText.indexOf( countryArray[i] ) > -1 ||
                      tweetText.indexOf( countryArray[i].slice(0,1).toLowerCase() +
                      countryArray[i].slice(1,countryArray.length)) > -1 ) {
+                     console.log('tweet text: '+data[j].user.screen_name);
+                     console.log(data[j].text);
 
-
-                    socket.emit( "state", { "country": countryArray[i], "tweet": data[j] } );
+                      socket.emit( data[j].user.screen_name, { "country": countryArray[i], "tweet": data[j] } );
 
                 }
               }

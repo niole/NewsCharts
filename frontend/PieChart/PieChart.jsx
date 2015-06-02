@@ -6,11 +6,6 @@ var Chart = require('./charts/Chart.jsx');
 
 
 module.exports = React.createClass({
-  getDefaultProps: function() {
-     return {
-       title: ''
-     };
-   },
   propTypes: {
     getCountrysTweets: React.PropTypes.func,
     radius: React.PropTypes.number,
@@ -19,7 +14,9 @@ module.exports = React.createClass({
     labelTextFill: React.PropTypes.string,
     valueTextFill: React.PropTypes.string,
     colors: React.PropTypes.func,
-    title: React.PropTypes.string
+    title: React.PropTypes.string,
+    displayName: React.PropTypes.string,
+
   },
 
   render: function() {
@@ -33,7 +30,7 @@ module.exports = React.createClass({
       React.createElement(Chart, {
         width: props.width,
         height: props.height,
-        title: props.title
+        title: props.displayName
       },
         React.createElement("g", {className: "rd3-piechart"},
           React.createElement(DataSeries, {
